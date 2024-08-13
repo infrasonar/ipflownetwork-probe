@@ -2,7 +2,7 @@ import ipaddress
 import logging
 from libprobe.asset import Asset
 from libprobe.exceptions import IgnoreCheckException
-from ..state import subscriptions, subscribe_check
+from ..state import subscriptions, subscribe_check, get_host_by_addr
 
 
 async def check_network(
@@ -28,7 +28,8 @@ async def check_network(
 
     state_data = {
         'network': [{
-            'name': str(addr),
-        } for addr in result],
+            'name': addr,
+            'host': get_host_by_addr(addr),
+        } for addr in map(str, result)],
     }
     return state_data

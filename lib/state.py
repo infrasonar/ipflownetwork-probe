@@ -1,13 +1,15 @@
 import asyncio
+import socket
 import time
 import logging
 from ipaddress import IPv4Network, IPv6Network
-from typing import Dict, Union
+from typing import Dict, Optional, Tuple, Union
 from .subscription import Subscription
 
 
 CLEANUP_SUBSCRIPTIONS_INTERVAL = 60
 MAX_SUBSCRIPTION_AGE = 3600
+MAX_HOST_LOOKUP_AGE = 14400
 
 
 def subscribe_check(
@@ -27,6 +29,17 @@ def unsubscribe_check(
     subscriptions.pop((asset_id, check_key), None)
 
 
+def get_host_by_addr(address: str) -> Optional[str]:
+    host, expire_ts = host_lk.get(address, (None, None))
+    if host is None or expire_ts > time.time():
+        try:
+            host, _, _ = socket.gethostbyaddr(address)
+        except Exception:
+            pass
+        host_lk[address] = (host, time.time() + MAX_HOST_LOOKUP_AGE)
+    return host
+
+
 async def cleanup_subscriptions_loop():
     while True:
         now = time.time()
@@ -37,4 +50,5 @@ async def cleanup_subscriptions_loop():
         await asyncio.sleep(60)
 
 
+host_lk: Dict[str, Tuple[str, float]] = {}
 subscriptions: Dict[int, Subscription] = {}
