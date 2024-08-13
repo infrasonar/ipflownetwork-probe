@@ -1,7 +1,7 @@
 import time
 from ipaddress import IPv4Address, IPv4Network
 from typing import Dict, Set, Tuple, NamedTuple
-from .netflow.flow import Flow
+from .ipflow.flow import Flow
 
 
 class Subscription(NamedTuple):

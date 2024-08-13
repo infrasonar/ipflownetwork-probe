@@ -1,7 +1,7 @@
 import asyncio
 import logging
 import os
-from .netflow.parser import on_packet
+from .ipflow.parser import on_packet
 from .state import subscriptions
 
 LISTEN_PORT = int(os.getenv('LISTEN_PORT', '2055'))
