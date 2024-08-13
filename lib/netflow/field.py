@@ -3,6 +3,12 @@ from .field_type import FieldType
 
 
 class Field:
+    __slots__ = (
+        '_fmt',
+        'id',
+        'length',
+    )
+
     def __init__(self, field_id: int, length: int):
         self._fmt = FIELD_TYPE_FMT.get(field_id, f'{length}s')
         self.id = field_id

@@ -1,6 +1,6 @@
 import struct
 from .field import Field
-from .flow import Flow
+from .flow import Flow, flowset_templates
 
 
 def on_flowset_template(line):
@@ -27,6 +27,3 @@ def on_flowset(line, flowset_id):
         for i in range(0, len(line) - 4, l):
             values = struct.unpack(fmt, line[i:i+l])
             yield Flow(flowset_id, values)
-
-
-flowset_templates = {}

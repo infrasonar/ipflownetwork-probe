@@ -4,7 +4,15 @@ from .field_type import FIELD_TYPE_FUNC
 from .field_type import FieldType
 
 
+flowset_templates = {}
+
+
 class Flow:
+    __slots__ = (
+        'flowset_id',
+        'values',
+    )
+
     def __init__(self, flowset_id, values):
         self.flowset_id = flowset_id
         self.values = values
@@ -27,6 +35,3 @@ class Flow:
                 addr = IPv4Address(self.values[fields_idx.index(ft.value)])
                 if addr in network:
                     yield addr
-
-
-from .flowset import flowset_templates

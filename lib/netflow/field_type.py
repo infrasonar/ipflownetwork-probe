@@ -53,6 +53,6 @@ FIELD_TYPE_FUNC = {
     62: lambda a: str(ipaddress.IPv6Address(a)),  # IPV6_NEXT_HOP
     63: lambda a: str(ipaddress.IPv6Address(a)),  # BGP_IPV6_NEXT_HOP
 
-    225: lambda a: str(ipaddress.IPv4Address(a)),  # postNATSourceIPv4Address
-    226: lambda a: str(ipaddress.IPv4Address(a)),  # postNATDestinationIPv4Address
+    225: lambda a: str(ipaddress.IPv4Address(a)),
+    226: lambda a: str(ipaddress.IPv4Address(a)),
 }
