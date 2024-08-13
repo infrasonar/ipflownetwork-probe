@@ -20,6 +20,11 @@ class FieldType(Enum):
     IPV4_NEXT_HOP = 15
     LAST_SWITCHED = 21
     FIRST_SWITCHED = 22
+    IPV6_SRC_ADDR = 27
+    IPV6_DST_ADDR = 28
+    IPV6_SRC_MASK = 29
+    IPV6_DST_MASK = 30
+    IPV6_NEXT_HOP = 62
 
 
 FIELD_TYPE_FMT = {
