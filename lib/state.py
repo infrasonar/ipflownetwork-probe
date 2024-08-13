@@ -1,8 +1,8 @@
 import asyncio
 import time
 import logging
-from ipaddress import IPv4Network
-from typing import Dict, Tuple
+from ipaddress import IPv4Network, IPv6Network
+from typing import Dict, Union
 from .subscription import Subscription
 
 
@@ -13,7 +13,7 @@ MAX_SUBSCRIPTION_AGE = 3600
 def subscribe_check(
     asset_id: int,
     check_key: str,
-    network: IPv4Network,
+    network: Union[IPv4Network, IPv6Network],
 ):
     logging.info(f'subscribe asset `{asset_id}` check `{check_key}`')
     subscriptions[(asset_id, check_key)] = Subscription.make(network)
