@@ -26,7 +26,7 @@ class Flow:
 
     def test_network(
         self,
-        network: IPv4Network
+        network: Union[IPv4Network, IPv6Network]
     ) -> Iterator[Union[IPv4Network, IPv6Network]]:
         fmt, l, fields, fields_idx = flowset_templates[self.flowset_id]
         for ft in (
