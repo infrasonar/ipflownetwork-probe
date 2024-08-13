@@ -1,5 +1,5 @@
 from ipaddress import IPv4Address, IPv4Network
-from typing import Generator
+from typing import Iterator
 from .field_type import FIELD_TYPE_FUNC
 from .field_type import FieldType
 
@@ -27,7 +27,7 @@ class Flow:
     def test_ipv4_network(
         self,
         network: IPv4Network
-    ) -> Generator[IPv4Address]:
+    ) -> Iterator[IPv4Address]:
         fmt, l, fields, fields_idx = flowset_templates[self.flowset_id]
         for ft in (
             FieldType.IPV4_DST_ADDR,
