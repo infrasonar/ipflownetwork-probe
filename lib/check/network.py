@@ -16,7 +16,7 @@ async def check_network(
     except Exception:
         logging.warning(
             'Check did not run; '
-            'address is not provided, invalid or empty')
+            'network is not provided, invalid or empty')
         raise IgnoreCheckException
 
     # get current subscription
