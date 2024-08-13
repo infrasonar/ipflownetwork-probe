@@ -1,15 +1,23 @@
-from typing import Dict, List, Tuple, NamedTuple
+import time
+from ipaddress import IPv4Address, IPv4Network
+from typing import Dict, Set, Tuple, NamedTuple
 from .netflow.flow import Flow
 
 
 class Subscription(NamedTuple):
-    filters: Tuple[Tuple[int, bytes]]
-    flows: List[Flow]
+    network: IPv4Network
+    result: Set[IPv4Address]
+    timestamp: int
 
     @classmethod
-    def make(cls, filters: Tuple[Tuple[int, bytes]]):
+    def make(cls, network: IPv4Network):
         self = cls(
-            filters=filters,
-            flows=[],
+            network=network,
+            result=set(),
+            timestamp=int(time.time()),
         )
         return self
+
+    def on_flow(self, flow: Flow):
+        for addr in flow.test_ipv4_network(self.network):
+            self.result.add(addr)

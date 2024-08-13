@@ -1,9 +1,9 @@
-[![CI](https://github.com/infrasonar/netflow-probe/workflows/CI/badge.svg)](https://github.com/infrasonar/netflow-probe/actions)
-[![Release Version](https://img.shields.io/github/release/infrasonar/netflow-probe)](https://github.com/infrasonar/netflow-probe/releases)
+[![CI](https://github.com/infrasonar/ipflownetwork-probe/workflows/CI/badge.svg)](https://github.com/infrasonar/ipflownetwork-probe/actions)
+[![Release Version](https://img.shields.io/github/release/infrasonar/ipflownetwork-probe)](https://github.com/infrasonar/ipflownetwork-probe/releases)
 
 # InfraSonar Netflow/IPFIX Probe
 
-Documentation: https://docs.infrasonar.com/collectors/probes/netflow/
+Documentation: https://docs.infrasonar.com/collectors/probes/ipflownetwork/
 
 ## Environment variable
 
@@ -23,23 +23,23 @@ Variable            | Default                        | Description
 ## Docker build
 
 ```
-docker build -t netflow-probe . --no-cache
+docker build -t ipflownetwork-probe . --no-cache
 ```
 
 ## Dry run
 
 Available checks:
-- `netflow`
+- `network`
 
 Create a yaml file, for example _(test.yaml)_:
 
 ```yaml
 asset:
   name: "foo.local"
-  check: "netflow"
+  check: "network"
   config:
-    address:
-      - "192.168.1.2"
+    network:
+      - "192.168.1.0/24"
 ```
 
 Run the probe with the `DRY_RUN` environment variable set the the yaml file above.

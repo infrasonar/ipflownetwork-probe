@@ -14,11 +14,10 @@ class ServerProtocol(asyncio.Protocol):
         # whe need the template flowsets
         for flow in on_packet(data):
             for subs in subscriptions.values():
-                if flow.test(subs.filters):
-                    subs.flows.append(flow.serialize())
+                subs.on_flow(flow)
 
 
-async def start_netflow_server():
+async def start_server():
     logging.info(f'Starting udp server')
     loop = asyncio.get_event_loop()
 

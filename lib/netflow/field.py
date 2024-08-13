@@ -1,12 +1,19 @@
+from .field_type import FIELD_TYPE_FMT
 from .field_type import FieldType
 
 
 class Field:
     def __init__(self, field_id: int, length: int):
-        # self._fmt
+        self._fmt = FIELD_TYPE_FMT.get(field_id, f'{length}s')
         self.id = field_id
         self.length = length
+
+    @property
+    def name(self) -> str:
+        # used for serializing flows, unknown fields will be dropped later
         try:
-            self.name = FieldType(field_id).name.lower()
+            return FieldType(self.id).name.lower()
         except Exception:
-            self.name = None
+            # field_id can either be unknown or purposely missing from the enum
+            # as we only expect a subset of the available metrics
+            return None

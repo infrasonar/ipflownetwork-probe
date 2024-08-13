@@ -1,3 +1,4 @@
+import logging
 import struct
 from .flowset import on_flowset, on_flowset_template
 
@@ -21,8 +22,17 @@ def on_packet(line: bytes):
         flowset_id, length = struct.unpack('>HH', line[pos:pos+4])
         flowset = line[pos+4:pos+length]
         pos += length
+
         if flowset_id == 0:
-            on_flowset_template(flowset)
+            try:
+                on_flowset_template(flowset)
+            except Exception:
+                logging.error('failed to parse FlowSet template')
+                # TODO break?
         else:
-            for flow in on_flowset(flowset, flowset_id):
-                yield flow
+            try:
+                for flow in on_flowset(flowset, flowset_id):
+                    yield flow
+            except Exception:
+                logging.warning('failed to parse FlowSet')
+                # TODO break?

@@ -1,22 +1,32 @@
+from ipaddress import IPv4Address, IPv4Network
+from typing import List
+from .field_type import FIELD_TYPE_FUNC
+from .field_type import FieldType
+
+
 class Flow:
     def __init__(self, flowset_id, values):
         self.flowset_id = flowset_id
         self.values = values
 
     def serialize(self):
-        # for k in list(f):
-        #     if isinstance(f[k], (ipaddress.IPv4Address, ipaddress.IPv6Address)):
-        #         f[k] = str(f[k])
-        #     elif isinstance(f[k], bytes):
-        #         f[k] = [int(a) for a in f[k]]
-        #         # del f[k]
-        fmt, l, funs, fields, fields_idx = flowset_templates[self.flowset_id]
-        values = [fun(v) for fun, v in zip(funs, self.values)]
-        return dict(zip([f.name for f in fields], values))
+        fmt, l, fields, fields_idx = flowset_templates[self.flowset_id]
+        return {
+            f.name: FIELD_TYPE_FUNC.get(f.id, lambda val: val)(val)
+            for f, val in zip(fields, self.values)
+        }
 
-    def test(self, filters):
-        fmt, l, funs, fields, fields_idx = flowset_templates[self.flowset_id]
-        return any(filter_id in fields_idx and self.values[fields_idx.index(filter_id)] == filter_value for filter_id, filter_value in filters)
+    def test_ipv4_network(self, network: IPv4Network) -> List[str]:
+        fmt, l, fields, fields_idx = flowset_templates[self.flowset_id]
+        for ft in (
+            FieldType.IPV4_DST_ADDR,
+            FieldType.IPV4_NEXT_HOP,
+            FieldType.IPV4_SRC_ADDR,
+        ):
+            if ft.value in fields_idx:
+                addr = IPv4Address(self.values[fields_idx.index(ft.value)])
+                if addr in network:
+                    yield addr
 
 
 from .flowset import flowset_templates

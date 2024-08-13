@@ -32,7 +32,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/infrasonar/netflow-probe
+          images: ${{ env.REGISTRY }}/infrasonar/ipflownetwork-probe
 
       - name: Get the version
         id: get_version
@@ -45,5 +45,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/infrasonar/netflow-probe:${{ steps.get_version.outputs.VERSION }},ghcr.io/infrasonar/netflow-probe:latest,ghcr.io/infrasonar/netflow-probe:unstable
+          tags: ghcr.io/infrasonar/ipflownetwork-probe:${{ steps.get_version.outputs.VERSION }},ghcr.io/infrasonar/ipflownetwork-probe:latest,ghcr.io/infrasonar/ipflownetwork-probe:unstable
           labels: ${{ steps.meta.outputs.labels }}
