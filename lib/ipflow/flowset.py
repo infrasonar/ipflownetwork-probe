@@ -23,7 +23,7 @@ def on_flowset_template(line: bytes):
 
 def on_flowset(line: bytes, flowset_id: int):
     if flowset_id in flowset_templates:
-        fmt, l, fields, fields_idx = flowset_templates[flowset_id]
-        for i in range(0, len(line) - 4, l):
-            values = struct.unpack(fmt, line[i:i+l])
+        fmt, length, _, _ = flowset_templates[flowset_id]
+        for i in range(0, len(line) - 4, length):
+            values = struct.unpack(fmt, line[i:i+length])
             yield Flow(flowset_id, values)

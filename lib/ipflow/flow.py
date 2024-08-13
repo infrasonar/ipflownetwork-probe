@@ -18,7 +18,7 @@ class Flow:
         self.values = values
 
     def serialize(self) -> dict:
-        fmt, l, fields, fields_idx = flowset_templates[self.flowset_id]
+        _, _, fields, _ = flowset_templates[self.flowset_id]
         return {
             f.name: FIELD_TYPE_FUNC.get(f.id, lambda val: val)(val)
             for f, val in zip(fields, self.values)
@@ -28,7 +28,7 @@ class Flow:
         self,
         network: Union[IPv4Network, IPv6Network]
     ) -> Iterator[Union[IPv4Network, IPv6Network]]:
-        fmt, l, fields, fields_idx = flowset_templates[self.flowset_id]
+        _, _, _, fields_idx = flowset_templates[self.flowset_id]
         for ft in (
             FieldType.IPV4_DST_ADDR,
             FieldType.IPV4_NEXT_HOP,
