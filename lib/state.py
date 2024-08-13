@@ -31,11 +31,16 @@ def unsubscribe_check(
 
 def get_host_by_addr(address: str) -> Optional[str]:
     host, expire_ts = host_lk.get(address, (None, None))
-    if host is None or expire_ts > time.time():
+
+    # request new name when no in lookup or aged
+    if expire_ts is None or expire_ts < time.time():
         try:
             host, _, _ = socket.gethostbyaddr(address)
         except Exception:
-            pass
+            # when error set empty
+            host = None
+
+        # add expiriation timestamp also when not found
         host_lk[address] = (host, time.time() + MAX_HOST_LOOKUP_AGE)
     return host
 
