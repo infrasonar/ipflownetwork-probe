@@ -18,7 +18,7 @@ class ServerProtocol(asyncio.Protocol):
 
 
 async def start_server():
-    logging.info(f'Starting udp server')
+    logging.info('Starting UDP server')
     loop = asyncio.get_event_loop()
 
     transport, protocol = await loop.create_datagram_endpoint(
