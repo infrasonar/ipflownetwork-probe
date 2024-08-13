@@ -1,5 +1,5 @@
 from ipaddress import IPv4Address, IPv4Network
-from typing import List
+from typing import Generator
 from .field_type import FIELD_TYPE_FUNC
 from .field_type import FieldType
 
@@ -17,14 +17,17 @@ class Flow:
         self.flowset_id = flowset_id
         self.values = values
 
-    def serialize(self):
+    def serialize(self) -> dict:
         fmt, l, fields, fields_idx = flowset_templates[self.flowset_id]
         return {
             f.name: FIELD_TYPE_FUNC.get(f.id, lambda val: val)(val)
             for f, val in zip(fields, self.values)
         }
 
-    def test_ipv4_network(self, network: IPv4Network) -> List[str]:
+    def test_ipv4_network(
+        self,
+        network: IPv4Network
+    ) -> Generator[IPv4Address]:
         fmt, l, fields, fields_idx = flowset_templates[self.flowset_id]
         for ft in (
             FieldType.IPV4_DST_ADDR,

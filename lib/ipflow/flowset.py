@@ -3,7 +3,7 @@ from .field import Field
 from .flow import Flow, flowset_templates
 
 
-def on_flowset_template(line):
+def on_flowset_template(line: bytes):
     pos = 0
     while pos < len(line):
         template_id, field_count = struct.unpack('>HH', line[pos:pos+4])
@@ -21,7 +21,7 @@ def on_flowset_template(line):
         )
 
 
-def on_flowset(line, flowset_id):
+def on_flowset(line: bytes, flowset_id: int):
     if flowset_id in flowset_templates:
         fmt, l, fields, fields_idx = flowset_templates[flowset_id]
         for i in range(0, len(line) - 4, l):
