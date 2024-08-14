@@ -4,7 +4,35 @@ from .field_type import FIELD_TYPE_FUNC
 from .field_type import FieldType
 
 
-flowset_templates = {}
+# negative values don't collide with normal template ID's (uint)
+V5_TEMPLATE_ID = -1
+
+flowset_templates = {
+    V5_TEMPLATE_ID: (
+        '>4s4s4sHHLLLLHH2sBBB3s4s',
+        48,
+        [],
+        [
+            FieldType.IPV4_SRC_ADDR,
+            FieldType.IPV4_DST_ADDR,
+            FieldType.IPV4_NEXT_HOP,
+            FieldType.INPUT_SNMP,
+            FieldType.OUTPUT_SNMP,
+            FieldType.IN_PKTS,
+            FieldType.IN_BYTES,
+            FieldType.FIRST_SWITCHED,
+            FieldType.LAST_SWITCHED,
+            FieldType.L4_SRC_PORT,
+            FieldType.L4_DST_PORT,
+            None,  # 1 byte padding
+            FieldType.PROTOCOL,
+            FieldType.TOS,
+            FieldType.TCP_FLAGS,
+            None,  # 3 byte padding
+            None,  # reserved
+        ],
+    )
+}
 
 
 class Flow:

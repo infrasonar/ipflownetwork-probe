@@ -7,7 +7,7 @@ class FieldType(Enum):
     IN_PKTS = 2
     FLOWS = 3
     PROTOCOL = 4
-    SRC_TOS = 5
+    TOS = 5
     TCP_FLAGS = 6
     L4_SRC_PORT = 7
     IPV4_SRC_ADDR = 8
