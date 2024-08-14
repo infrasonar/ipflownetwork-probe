@@ -3,22 +3,21 @@ import struct
 from .flowset import on_flowset, on_flowset_template
 
 
-HEADER_FMT = '>HHLLLL'
-HEADER_SIZE = 20
+HEADER_FMT = '>HHLLL'
+HEADER_SIZE = 16
 
 
-def on_packet(line: bytes):
+def on_packet_v10(line: bytes):
     (
         version,
-        count,
-        sysuptime,
-        unix_secs,
+        message_length,
+        export_time,
         sequence_number,
-        source_id,
+        observation_domain_id,
     ) = struct.unpack(HEADER_FMT, line[:HEADER_SIZE])
 
     pos = HEADER_SIZE
-    while pos + 4 < len(line):  # TODO could also use (flow) count?
+    while pos < len(line):  # TODO could also use message_length?
         flowset_id, length = struct.unpack('>HH', line[pos:pos+4])
 
         # prevent endless loop
@@ -29,7 +28,10 @@ def on_packet(line: bytes):
         flowset = line[pos+4:pos+length]
         pos += length
 
-        if flowset_id == 0:
+        # rfc7011:
+        # values 0-255 are reserved for special Set types
+        # (e.g., Template Sets themselves)
+        if flowset_id < 256:
             try:
                 on_flowset_template(flowset)
             except Exception:
