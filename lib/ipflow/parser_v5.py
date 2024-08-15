@@ -31,4 +31,4 @@ def on_packet_v5(line: bytes):
                 yield flow
         except Exception:
             logging.warning('failed to parse FlowSet')
-            # TODO break?
+            break

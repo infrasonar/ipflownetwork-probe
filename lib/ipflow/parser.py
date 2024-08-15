@@ -34,11 +34,11 @@ def on_packet(line: bytes):
                 on_flowset_template(flowset)
             except Exception:
                 logging.error('failed to parse FlowSet template')
-                # TODO break?
+                break
         else:
             try:
                 for flow in on_flowset(flowset, flowset_id):
                     yield flow
             except Exception:
                 logging.warning('failed to parse FlowSet')
-                # TODO break?
+                break

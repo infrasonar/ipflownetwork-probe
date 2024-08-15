@@ -29,7 +29,7 @@ class ServerProtocol(asyncio.Protocol):
             logging.warning('unsupported netflow version')
             return
 
-        # v5 has no templates so could be ignored when checks are listening
+        # v5 has no templates so could be ignored when no checks are listening
         if version == 5 and not subscriptions:
             return
 
