@@ -21,15 +21,16 @@ async def check_network(
 
     # get current subscription
     subs = subscriptions.get((asset.id, 'network'))
-    result = subs.result if subs else []
+    result = subs.result if subs else {}
 
     # re-subscribe
     subscribe_check(asset.id, 'network', network)
 
     state_data = {
         'network': [{
-            'name': addr,
-            'host': get_host_by_addr(addr),
-        } for addr in map(str, result)],
+            'name': str(addr),
+            'host': get_host_by_addr(str(addr)),
+            'ipflow_version': version,
+        } for addr, version in result.items()],
     }
     return state_data

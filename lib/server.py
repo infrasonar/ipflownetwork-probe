@@ -1,20 +1,48 @@
 import asyncio
 import logging
 import os
-from .ipflow.parser import on_packet
+import struct
+from lib.ipflow.parser import on_packet
+from lib.ipflow.parser_v10 import on_packet_v10
+from lib.ipflow.parser_v5 import on_packet_v5
 from .state import subscriptions
 
 LISTEN_PORT = int(os.getenv('LISTEN_PORT', '2055'))
+
+COMMON_HEADER_FMT = '>HHL'
+COMMON_HEADER_SZ = 8
 
 
 class ServerProtocol(asyncio.Protocol):
 
     def datagram_received(self, data, addr):
+        if len(data) < COMMON_HEADER_SZ:
+            return
+
+        (
+            version,
+            count,
+            sysuptime,
+        ) = struct.unpack(COMMON_HEADER_FMT, data[:COMMON_HEADER_SZ])
+
+        if version not in (5, 9, 10):
+            logging.warning('unsupported netflow version')
+            return
+
+        # v5 has no templates so could be ignored when checks are listening
+        if version == 5 and not subscriptions:
+            return
+
+        parser = {
+            5: on_packet_v5,
+            9: on_packet,
+            10: on_packet_v10,
+        }[version]
         # parse every packet regardless of any subscriptions
         # whe need the template flowsets
-        for flow in on_packet(data):
+        for flow in parser(data):
             for subs in subscriptions.values():
-                subs.on_flow(flow)
+                subs.on_flow(flow, version)
 
 
 async def start_server():
