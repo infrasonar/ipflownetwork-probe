@@ -31,8 +31,8 @@ class Test(unittest.TestCase):
             for item in on_packet_v5(pkt):
                 ct += 1
 
-        # expect 2 flows
-        self.assertEqual(2, ct)
+        # expect 3 flows
+        self.assertEqual(3, ct)
 
     def test_v9(self):
         frame_offset = 100

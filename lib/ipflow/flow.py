@@ -1,3 +1,4 @@
+import struct
 from ipaddress import IPv4Address, IPv4Network, IPv6Address, IPv6Network
 from typing import Iterator, Union
 from .field_type import FIELD_TYPE_FUNC
@@ -6,11 +7,13 @@ from .field_type import FieldType
 
 # negative values don't collide with normal template ID's (uint)
 V5_TEMPLATE_ID = -1
+V5_TEMPLATE_FMT = '>4s4s4sHHLLLLHH2sBBB3s4s'
+V5_TEMPLATE_SIZE = struct.calcsize(V5_TEMPLATE_FMT)
 
 flowset_templates = {
     V5_TEMPLATE_ID: (
-        '>4s4s4sHHLLLLHH2sBBB3s4s',
-        48,
+        V5_TEMPLATE_FMT,
+        V5_TEMPLATE_SIZE,
         [],
         [
             FieldType.IPV4_SRC_ADDR,

@@ -4,7 +4,7 @@ from .flowset import on_flowset, on_flowset_template
 
 
 HEADER_FMT = '>HHLLLL'
-HEADER_SIZE = 20
+HEADER_SIZE = struct.calcsize(HEADER_FMT)
 
 
 def on_packet(line: bytes):
@@ -17,8 +17,10 @@ def on_packet(line: bytes):
         source_id,
     ) = struct.unpack(HEADER_FMT, line[:HEADER_SIZE])
 
+    # we don't use header.count because it includes the Options Template
+    # FlowSets (FlowSet ID 1), which we ignore
     pos = HEADER_SIZE
-    while pos + 4 < len(line):  # TODO could also use (flow) count?
+    while pos + 4 < len(line):
         flowset_id, length = struct.unpack('>HH', line[pos:pos+4])
 
         # prevent endless loop
@@ -35,7 +37,7 @@ def on_packet(line: bytes):
             except Exception:
                 logging.error('failed to parse FlowSet template')
                 break
-        else:
+        elif flowset_id > 255:
             try:
                 for flow in on_flowset(flowset, flowset_id):
                     yield flow

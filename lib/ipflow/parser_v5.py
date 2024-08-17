@@ -1,11 +1,11 @@
 import logging
 import struct
 from .flowset import on_flowset
-from .flow import V5_TEMPLATE_ID
+from .flow import V5_TEMPLATE_ID, V5_TEMPLATE_SIZE
 
 
 HEADER_FMT = '>HHLLLLBBH'
-HEADER_SIZE = 24
+HEADER_SIZE = struct.calcsize(HEADER_FMT)
 
 
 def on_packet_v5(line: bytes):
@@ -21,10 +21,11 @@ def on_packet_v5(line: bytes):
         sampling_interval
     ) = struct.unpack(HEADER_FMT, line[:HEADER_SIZE])
 
+    flowset_size = V5_TEMPLATE_SIZE
     pos = HEADER_SIZE
-    while pos + 48 < len(line):  # TODO could also use (flow) count?
-        flowset = line[pos:pos+48]
-        pos += 48
+    for _ in range(count):
+        flowset = line[pos:pos+flowset_size]
+        pos += flowset_size
 
         try:
             for flow in on_flowset(flowset, V5_TEMPLATE_ID):

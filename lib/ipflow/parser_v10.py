@@ -4,7 +4,7 @@ from .flowset import on_flowset, on_flowset_template
 
 
 HEADER_FMT = '>HHLLL'
-HEADER_SIZE = 16
+HEADER_SIZE = struct.calcsize(HEADER_FMT)
 
 
 def on_packet_v10(line: bytes):
@@ -28,16 +28,13 @@ def on_packet_v10(line: bytes):
         flowset = line[pos+4:pos+length]
         pos += length
 
-        # rfc7011:
-        # values 0-255 are reserved for special Set types
-        # (e.g., Template Sets themselves)
-        if flowset_id < 256:
+        if flowset_id == 2:
             try:
                 on_flowset_template(flowset)
             except Exception:
                 logging.error('failed to parse FlowSet template')
                 break
-        else:
+        elif flowset_id > 255:
             try:
                 for flow in on_flowset(flowset, flowset_id):
                     yield flow
