@@ -17,7 +17,7 @@ def on_packet_v10(line: bytes):
     ) = struct.unpack(HEADER_FMT, line[:HEADER_SIZE])
 
     pos = HEADER_SIZE
-    while pos < len(line):  # TODO could also use message_length?
+    while pos + 4 < len(line) and pos < message_length:
         flowset_id, length = struct.unpack('>HH', line[pos:pos+4])
 
         # prevent endless loop

@@ -1,5 +1,6 @@
 import struct
 import unittest
+from lib.ipflow.flow import flowset_templates
 from lib.ipflow.parser import on_packet
 from lib.ipflow.parser_v10 import on_packet_v10
 from lib.ipflow.parser_v5 import on_packet_v5
@@ -17,6 +18,7 @@ class Test(unittest.TestCase):
         ct = 0
         pos = 0
         while pos + 74 < len(line):
+            size, = struct.unpack('H', line[pos+8:pos+10])
             l2 = struct.unpack('>6s6s2s', line[pos+32:pos+46])
             l3 = struct.unpack('>BBHHHBBH4s4s', line[pos+46:pos+66])
             l4 = struct.unpack('>HHHH', line[pos+66:pos+74])
@@ -25,9 +27,8 @@ class Test(unittest.TestCase):
             # print(l3)
             # print(l4)
 
-            size = l4[2] - 8  # exclude l4_header
-            pkt = line[pos+74:pos+74+size]
-            pos += 74 + size
+            pkt = line[pos+74:pos+size]
+            pos += size
             for item in on_packet_v5(pkt):
                 ct += 1
 
@@ -42,6 +43,7 @@ class Test(unittest.TestCase):
         ct = 0
         pos = 0
         while pos + 74 < len(line):
+            size, = struct.unpack('H', line[pos+8:pos+10])
             l2 = struct.unpack('>6s6s2s', line[pos+32:pos+46])
             l3 = struct.unpack('>BBHHHBBH4s4s', line[pos+46:pos+66])
             l4 = struct.unpack('>HHHH', line[pos+66:pos+74])
@@ -50,14 +52,14 @@ class Test(unittest.TestCase):
             # print(l3)
             # print(l4)
 
-            size = l4[2] - 8  # exclude l4_header
-            pkt = line[pos+74:pos+74+size]
-            pos += 74 + size
+            pkt = line[pos+74:pos+size]
+            pos += size
             for item in on_packet(pkt):
                 ct += 1
 
         # expect 2 flows
         self.assertEqual(2, ct)
+        del flowset_templates[256]
 
     def test_v9_ipv6(self):
         frame_offset = 100
@@ -67,6 +69,7 @@ class Test(unittest.TestCase):
         ct = 0
         pos = 0
         while pos + 94 < len(line):
+            size, = struct.unpack('H', line[pos+8:pos+10])
             l2 = struct.unpack('>6s6s2s', line[pos+32:pos+46])
             l3 = struct.unpack('>BBHHBB16s16s', line[pos+46:pos+86])
             l4 = struct.unpack('>HHHH', line[pos+86:pos+94])
@@ -75,15 +78,15 @@ class Test(unittest.TestCase):
             # print(l3)
             # print(l4)
 
-            size = l4[2] - 8  # exclude l4_header
-            pkt = line[pos+94:pos+94+size]
-            pos += 94 + size
+            pkt = line[pos+94:pos+size]
+            pos += size
 
             for item in on_packet(pkt):
                 ct += 1
 
-        # expect 3 flows and an exception
-        self.assertEqual(3, ct)
+        # expect 5 flows
+        self.assertEqual(5, ct)
+        del flowset_templates[256]
 
     def test_v9_mpls(self):
         frame_offset = 100
@@ -93,6 +96,7 @@ class Test(unittest.TestCase):
         ct = 0
         pos = 0
         while pos + 74 < len(line):
+            size, = struct.unpack('H', line[pos+8:pos+10])
             l2 = struct.unpack('>6s6s2s', line[pos+32:pos+46])
             l3 = struct.unpack('>BBHHHBBH4s4s', line[pos+46:pos+66])
             l4 = struct.unpack('>HHHH', line[pos+66:pos+74])
@@ -101,14 +105,13 @@ class Test(unittest.TestCase):
             # print(l3)
             # print(l4)
 
-            size = l4[2] - 8  # exclude l4_header
-            pkt = line[pos+74:pos+74+size]
-            pos += 74 + size
+            pkt = line[pos+74:pos+size]
+            pos += size
             for item in on_packet(pkt):
                 ct += 1
 
-        # expect 5 flows and an exception
-        self.assertEqual(5, ct)
+        # no template
+        self.assertEqual(0, ct)
 
     def test_v10(self):
         frame_offset = 100
@@ -118,6 +121,7 @@ class Test(unittest.TestCase):
         ct = 0
         pos = 0
         while pos + 74 < len(line):
+            size, = struct.unpack('H', line[pos+8:pos+10])
             l2 = struct.unpack('>6s6s2s', line[pos+32:pos+46])
             l3 = struct.unpack('>BBHHHBBH4s4s', line[pos+46:pos+66])
             l4 = struct.unpack('>HHHH', line[pos+66:pos+74])
@@ -126,14 +130,14 @@ class Test(unittest.TestCase):
             # print(l3)
             # print(l4)
 
-            size = l4[2] - 8  # exclude l4_header
-            pkt = line[pos+74:pos+74+size]
-            pos += 74 + size
+            pkt = line[pos+74:pos+size]
+            pos += size
             for item in on_packet_v10(pkt):
                 ct += 1
 
         # expect 3 flows
         self.assertEqual(3, ct)
+        del flowset_templates[256]
 
     def test_v10_ipv6(self):
         frame_offset = 100
@@ -143,6 +147,7 @@ class Test(unittest.TestCase):
         ct = 0
         pos = 0
         while pos + 94 < len(line):
+            size, = struct.unpack('H', line[pos+8:pos+10])
             l2 = struct.unpack('>6s6s2s', line[pos+32:pos+46])
             l3 = struct.unpack('>BBHHBB16s16s', line[pos+46:pos+86])
             l4 = struct.unpack('>HHHH', line[pos+86:pos+94])
@@ -151,15 +156,15 @@ class Test(unittest.TestCase):
             # print(l3)
             # print(l4)
 
-            size = l4[2] - 8  # exclude l4_header
-            pkt = line[pos+94:pos+94+size]
-            pos += 94 + size
+            pkt = line[pos+94:pos+size]
+            pos += size
 
             for item in on_packet_v10(pkt):
                 ct += 1
 
         # expect 3 flows
         self.assertEqual(3, ct)
+        del flowset_templates[256]
 
     def test_v10_mpls(self):
         frame_offset = 100
@@ -169,6 +174,7 @@ class Test(unittest.TestCase):
         ct = 0
         pos = 0
         while pos + 74 < len(line):
+            size, = struct.unpack('H', line[pos+8:pos+10])
             l2 = struct.unpack('>6s6s2s', line[pos+32:pos+46])
             l3 = struct.unpack('>BBHHHBBH4s4s', line[pos+46:pos+66])
             l4 = struct.unpack('>HHHH', line[pos+66:pos+74])
@@ -177,14 +183,13 @@ class Test(unittest.TestCase):
             # print(l3)
             # print(l4)
 
-            size = l4[2] - 8  # exclude l4_header
-            pkt = line[pos+74:pos+74+size]
-            pos += 74 + size
+            pkt = line[pos+74:pos+size]
+            pos += size
             for item in on_packet_v10(pkt):
                 ct += 1
 
-        # expect 5 flows and an exception
-        self.assertEqual(5, ct)
+        # no template
+        self.assertEqual(0, ct)
 
 
 if __name__ == '__main__':
