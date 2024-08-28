@@ -29,7 +29,7 @@ class Test(unittest.TestCase):
 
             pkt = line[pos+74:pos+size]
             pos += size
-            for item in on_packet_v5(pkt):
+            for item in on_packet_v5(pkt, l3[9]):
                 ct += 1
 
         # expect 3 flows
@@ -54,12 +54,12 @@ class Test(unittest.TestCase):
 
             pkt = line[pos+74:pos+size]
             pos += size
-            for item in on_packet(pkt):
+            for item in on_packet(pkt, l3[9]):
                 ct += 1
 
         # expect 2 flows
         self.assertEqual(2, ct)
-        del flowset_templates[256]
+        del flowset_templates[(l3[9], 0, 256)]
 
     def test_v9_ipv6(self):
         frame_offset = 100
@@ -81,12 +81,12 @@ class Test(unittest.TestCase):
             pkt = line[pos+94:pos+size]
             pos += size
 
-            for item in on_packet(pkt):
+            for item in on_packet(pkt, l3[7]):
                 ct += 1
 
         # expect 5 flows
         self.assertEqual(5, ct)
-        del flowset_templates[256]
+        del flowset_templates[(l3[7], 0, 256)]
 
     def test_v9_mpls(self):
         frame_offset = 100
@@ -107,7 +107,7 @@ class Test(unittest.TestCase):
 
             pkt = line[pos+74:pos+size]
             pos += size
-            for item in on_packet(pkt):
+            for item in on_packet(pkt, l3[9]):
                 ct += 1
 
         # no template
@@ -132,12 +132,12 @@ class Test(unittest.TestCase):
 
             pkt = line[pos+74:pos+size]
             pos += size
-            for item in on_packet_v10(pkt):
+            for item in on_packet_v10(pkt, l3[9]):
                 ct += 1
 
         # expect 3 flows
         self.assertEqual(3, ct)
-        del flowset_templates[256]
+        del flowset_templates[(l3[9], 0, 256)]
 
     def test_v10_ipv6(self):
         frame_offset = 100
@@ -159,12 +159,12 @@ class Test(unittest.TestCase):
             pkt = line[pos+94:pos+size]
             pos += size
 
-            for item in on_packet_v10(pkt):
+            for item in on_packet_v10(pkt, l3[7]):
                 ct += 1
 
         # expect 3 flows
         self.assertEqual(3, ct)
-        del flowset_templates[256]
+        del flowset_templates[(l3[7], 0, 256)]
 
     def test_v10_mpls(self):
         frame_offset = 100
@@ -185,7 +185,7 @@ class Test(unittest.TestCase):
 
             pkt = line[pos+74:pos+size]
             pos += size
-            for item in on_packet_v10(pkt):
+            for item in on_packet_v10(pkt, l3[7]):
                 ct += 1
 
         # no template
