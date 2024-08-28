@@ -20,7 +20,7 @@ async def check_network(
         raise IgnoreCheckException
 
     # get current subscription
-    subs = subscriptions.get((asset.id, 'network'))
+    subs = subscriptions.get((asset.id, 'network', network))
     result = subs.result if subs else {}
 
     # re-subscribe
