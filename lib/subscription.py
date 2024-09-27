@@ -1,12 +1,12 @@
 import time
 from ipaddress import IPv4Address, IPv4Network, IPv6Address, IPv6Network
-from typing import Dict, Set, Tuple, NamedTuple, Union
+from typing import NamedTuple, Union
 from .ipflow.flow import Flow
 
 
 class Subscription(NamedTuple):
     network: Union[IPv4Network, IPv6Network]
-    result: Dict[Union[IPv4Address, IPv6Address], int]
+    result: dict[Union[IPv4Address, IPv6Address], int]
     timestamp: int
 
     @classmethod
