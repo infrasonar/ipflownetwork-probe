@@ -7,9 +7,9 @@ from lib.version import __version__ as version
 
 
 if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(start_server())
-    asyncio.ensure_future(cleanup_subscriptions_loop())
+    loop = asyncio.new_event_loop()
+    start_server(loop)
+    asyncio.ensure_future(cleanup_subscriptions_loop(), loop=loop)
 
     checks = {
         'network': check_network,
@@ -17,4 +17,4 @@ if __name__ == '__main__':
 
     probe = Probe("ipflownetwork", version, checks)
 
-    probe.start()
+    probe.start(loop=loop)
