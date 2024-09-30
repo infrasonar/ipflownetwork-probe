@@ -72,7 +72,9 @@ class ServerProtocol(asyncio.Protocol):
 
 
 def start_server(loop: asyncio.AbstractEventLoop):
-    logging.info('Starting UDP server')
+    logging.info(f'listening for netflow/ipfix packets on port {LISTEN_PORT}')
+    for addr, port in FORWARD:
+        logging.info(f'forwarding to {addr}:{port}')
 
     try:
         loop.run_until_complete(
