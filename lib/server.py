@@ -8,9 +8,10 @@ from lib.ipflow.parser_v5 import on_packet_v5
 from .state import subscriptions
 
 LISTEN_PORT = int(os.getenv('LISTEN_PORT', '2055'))
+FORWARD_HOST = os.getenv('FORWARD_HOST', 'host.docker.internal')
 FORWARD_PORTS = os.getenv('FORWARD_PORTS')
 FORWARD = [
-    ('127.0.0.1', pt)
+    (FORWARD_HOST, pt)
     for pt in map(int, FORWARD_PORTS.split(','))
 ] if FORWARD_PORTS else []
 assert all(0 < pt < 65536 and pt != LISTEN_PORT for _, pt in FORWARD)
@@ -35,14 +36,16 @@ class ServerProtocol(asyncio.Protocol):
         ) = struct.unpack(COMMON_HEADER_FMT, data[:COMMON_HEADER_SZ])
 
         if version not in (5, 9, 10):
+            # TODO 10 times
             logging.warning('unsupported netflow version')
             return
 
-        # TODO
-        # should this be done ahead of the above checks?
-        # assume no exceptions?
         for dest in FORWARD:
-            self.transport.sendto(data, dest)
+            try:
+                self.transport.sendto(data, dest)
+            except Exception:
+                # TODO 1 time / conn
+                logging.warning('failed to forward package')
 
         # v5 has no templates so could be ignored when no checks are listening
         if version == 5 and not subscriptions:
