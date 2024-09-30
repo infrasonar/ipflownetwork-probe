@@ -83,9 +83,9 @@ def start_server(loop: asyncio.AbstractEventLoop):
     except OSError:
         logging.critical(
             f'Port {LISTEN_PORT} is already in use. Most likely the '
-            '`ipflow-probe` is using it. Configure the `ipflownetwork-probe` '
+            '`ipflow-probe` is using it. Configure the `ipflow-probe` '
             f'to listen to port {LISTEN_PORT + 1} and set the '
-            '`ipflow-probe` to forward the traffic there. See the '
+            '`ipflownetwork-probe` to forward the traffic there. See the '
             '`LISTEN_PORT` and `FORWARD_PORTS` environment variable or use '
             'the appliance manager '
             '(https://github.com/infrasonar/appliance-manager).'
