@@ -21,6 +21,7 @@ Variable            | Default                        | Description
 `LISTEN_PORT`       | `2055`                         | Port to listen to for flow packets
 `FORWARD_HOST`      | `127.0.0.1`                    | Forward UDP traffic to this host (only applicable if FORWARD_PORTS is set).
 `FORWARD_PORTS`     | _none_                         | Forward UDP traffic to these local ports for other listeners (comma separate for multiple ports).
+
 ## Docker build
 
 ```
