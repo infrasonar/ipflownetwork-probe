@@ -15,6 +15,7 @@ class Test(unittest.TestCase):
         with open(f'{DATA_DIR}/netflow_v5_ipv4.pcapng', 'rb') as f:
             line = f.read()[frame_offset:]
 
+        l2, l3, l4 = [], [], []
         ct = 0
         pos = 0
         while pos + 74 < len(line):
@@ -40,6 +41,7 @@ class Test(unittest.TestCase):
         with open(f'{DATA_DIR}/netflow_v9_ipv4.pcapng', 'rb') as f:
             line = f.read()[frame_offset:]
 
+        l2, l3, l4 = [], [], []
         ct = 0
         pos = 0
         while pos + 74 < len(line):
@@ -66,6 +68,7 @@ class Test(unittest.TestCase):
         with open(f'{DATA_DIR}/netflow_v9_ipv6.pcapng', 'rb') as f:
             line = f.read()[frame_offset:]
 
+        l2, l3, l4 = [], [], []
         ct = 0
         pos = 0
         while pos + 94 < len(line):
@@ -93,6 +96,7 @@ class Test(unittest.TestCase):
         with open(f'{DATA_DIR}/netflow_v9_mpls.pcapng', 'rb') as f:
             line = f.read()[frame_offset:]
 
+        l2, l3, l4 = [], [], []
         ct = 0
         pos = 0
         while pos + 74 < len(line):
@@ -118,6 +122,7 @@ class Test(unittest.TestCase):
         with open(f'{DATA_DIR}/netflow_v10_ipv4.pcapng', 'rb') as f:
             line = f.read()[frame_offset:]
 
+        l2, l3, l4 = [], [], []
         ct = 0
         pos = 0
         while pos + 74 < len(line):
@@ -144,6 +149,7 @@ class Test(unittest.TestCase):
         with open(f'{DATA_DIR}/netflow_v10_ipv6.pcapng', 'rb') as f:
             line = f.read()[frame_offset:]
 
+        l2, l3, l4 = [], [], []
         ct = 0
         pos = 0
         while pos + 94 < len(line):
@@ -171,6 +177,7 @@ class Test(unittest.TestCase):
         with open(f'{DATA_DIR}/netflow_v10_mpls.pcapng', 'rb') as f:
             line = f.read()[frame_offset:]
 
+        l2, l3, l4 = [], [], []
         ct = 0
         pos = 0
         while pos + 74 < len(line):
