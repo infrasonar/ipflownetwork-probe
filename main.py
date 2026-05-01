@@ -1,15 +1,15 @@
 import asyncio
 from libprobe.probe import Probe
-from lib.check.network import check_network
+from lib.check.network import CheckNetwork
 from lib.server import start_server
 from lib.state import cleanup_subscriptions_loop
 from lib.version import __version__ as version
 
 
 if __name__ == '__main__':
-    checks = {
-        'network': check_network,
-    }
+    checks = (
+        CheckNetwork,
+    )
     probe = Probe("ipflownetwork", version, checks)
 
     loop = asyncio.new_event_loop()
